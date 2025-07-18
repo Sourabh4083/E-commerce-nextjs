@@ -39,7 +39,7 @@ export default function LoginForm() {
       // Delay redirect to allow cookie to register (especially in production)
       setTimeout(() => {
         router.push(redirectPath);
-      }, 150);
+      }, 300);
     }
 
 
