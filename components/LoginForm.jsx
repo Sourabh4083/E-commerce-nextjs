@@ -34,11 +34,15 @@ export default function LoginForm() {
 
     if (res.ok) {
       toast.success("✅ Login successful!");
-      await refreshUser();
-      router.push(redirectPath);
-    } else {
-      toast.error(data.error || "❌ Invalid credentials");
+      await refreshUser(); // if needed to sync user context
+
+      // Delay redirect to allow cookie to register (especially in production)
+      setTimeout(() => {
+        router.push(redirectPath);
+      }, 150);
     }
+
+
   };
 
   return (
