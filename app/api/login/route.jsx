@@ -41,14 +41,15 @@ export async function POST(req) {
     )
 
 
-    const cookieStore = await cookies();
-    cookieStore.set("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+     const response = NextResponse.json({ message: "Login successful" });
 
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7
-    })
+  response.cookies.set("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+  });
 
-    return NextResponse.json({ message: "Login successful" })
+  return response;
 }

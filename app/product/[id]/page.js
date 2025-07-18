@@ -8,43 +8,34 @@ import { formateCurrency } from "@/utils/formatCurrency";
 import { useRouter } from "next/navigation";
 
 export default function ProductDetail(props) {
-  const params = use(props.params)
-  const router = useRouter()
-  const [products, setProducts] = useState([])
-  const { addToCart } = useCart()
+    const params = use(props.params)
+    const router = useRouter()
+    const [products, setProducts] = useState([])
+    const { addToCart } = useCart()
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const res = await fetch("/api/products")
-      const data = await res.json()
-      if (res.ok) setProducts(data)
-    }
-    fetchProducts()
-  }, [])
-
-
-  const product = products.find((item) => item._id === params.id)
-
-  if (!product) return <div className="p-8">Product not found.</div>
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const res = await fetch("/api/products")
+            const data = await res.json()
+            if (res.ok) setProducts(data)
+        }
+        fetchProducts()
+    }, [])
 
 
-  const handleBuyNow = async () => {
-    // Check if user is authenticated
-    const token = document.cookie.split(';').find(c => c.trim().startsWith('token='));
+    const product = products.find((item) => item._id === params.id)
 
-    if (!token) {
-      // Redirect to login with current product info
-      router.push(`/login?redirect=/product/${params.id}&action=buy`);
-      return;
+    if (!product) return <div className="p-8">Product not found.</div>
+
+
+    const handleBuyNow = () => {
+        addToCart({ ...product, quantity: 1 })
+        router.push("/checkout")
     }
 
-    addToCart({ ...product, quantity: 1 });
-    router.push("/checkout");
-  }
 
-
-  return (
-    <main className="p-6 sm:p-8 bg-gradient-to-b from-white to-gray-100 min-h-screen">
+    return (
+         <main className="p-6 sm:p-8 bg-gradient-to-b from-white to-gray-100 min-h-screen">
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-start">
         {/* Image */}
         <div className="relative overflow-hidden rounded-xl shadow-lg">
@@ -87,5 +78,5 @@ export default function ProductDetail(props) {
         </div>
       </div>
     </main>
-  )
+    )
 }
